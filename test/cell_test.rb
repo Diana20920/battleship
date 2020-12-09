@@ -24,20 +24,20 @@ class CellTest < Minitest::Test
     cell.place_ship(cruiser)
 
     assert_equal cruiser, cell.ship
-  end 
+  end
 
+  def test_cell_is_empty
+    cell = Cell.new("B4")
 
+    assert cell.empty?
+  end
 
-  # def test_cell_is_empty
-  #   cell = Cell.new("B4")
-  #
-  #   assert cell.empty?
-  # end
+  def test_cell_is_not_empty
+    cell = Cell.new("B4")
+    cruiser = Ship.new("Cruiser", 3)
+    cell.place_ship(cruiser)
 
-  # def test_cell_is_empty
-  #   cell = Cell.new("B4")
-  #
-  #   refute cell.empty?
-  # end
+    refute cell.empty?
+  end
 
 end
