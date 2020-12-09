@@ -12,7 +12,7 @@ class CellTest < Minitest::Test
 
   def test_it_has_readable_attributes
     cell = Cell.new("B4")
-
+  
     assert_equal "B4", cell.coordinate
     assert_nil cell.ship
     assert_equal false, cell.was_fired_upon
