@@ -30,4 +30,13 @@ class ShipTest < Minitest::Test
 
     assert_equal false, cruiser.sunk?
   end
+
+  def test_ship_sunk
+    cruiser = Ship.new("Cruiser", 3)
+    cruiser.hit
+    cruiser.hit
+    cruiser.hit
+
+    assert_equal true, cruiser.sunk?
+  end
 end
