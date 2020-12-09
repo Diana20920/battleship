@@ -7,4 +7,10 @@ class Cell
     @was_fired_upon = false
   end
 
+  def place_ship(ship_to_be_placed)
+    @ship = ship_to_be_placed
+  end
+  # def empty?
+  #   true
+  # end
 end
