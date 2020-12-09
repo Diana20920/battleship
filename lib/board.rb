@@ -26,6 +26,12 @@ attr_reader :cells
     @cells.has_key?(coordinate)
   end
 
+  def place(ship, coordinate_array)
+    coordinate_array.each do |coordinate|
+      @cells[coordinate].place_ship(ship)
+    end
+  end
+
   def valid_placement?(ship, array)
     if ship.length != array.count
       false
