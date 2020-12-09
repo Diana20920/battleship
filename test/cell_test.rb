@@ -14,7 +14,7 @@ class CellTest < Minitest::Test
     cell = Cell.new("B4")
 
     assert_equal "B4", cell.coordinate
-    assert_equal nil, cell.ship
+    assert_nil cell.ship
     assert_equal false, cell.was_fired_upon
   end
 
@@ -38,6 +38,16 @@ class CellTest < Minitest::Test
     cell.place_ship(cruiser)
 
     refute cell.empty?
+  end
+
+  def test_fire_upon
+    cell = Cell.new("B4")
+    cruiser = Ship.new("Cruiser", 3)
+    cell.place_ship(cruiser)
+    cell.fire_upon
+
+    assert_equal 2, cruiser.health
+    assert cell.was_fired_upon
   end
 
 end

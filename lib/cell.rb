@@ -18,4 +18,12 @@ class Cell
       false
     end
   end
+
+  def fire_upon
+    @was_fired_upon = true
+    if @ship != nil
+      ship.hit
+    end 
+  end
+
 end
