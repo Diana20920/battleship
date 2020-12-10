@@ -37,6 +37,7 @@ class BoardTest < Minitest::Test
     cell_1 = board.cells["A1"]
     cell_2 = board.cells["A2"]
     cell_3 = board.cells["A3"]
+
     assert_equal cruiser, cell_1.ship
     assert_equal cruiser, cell_2.ship
     assert_equal cruiser, cell_3.ship
@@ -98,12 +99,13 @@ class BoardTest < Minitest::Test
     board = Board.new
     cruiser = Ship.new("Cruiser", 3)
     assert_equal true, board.are_whole_coordinates_consecutive?(cruiser, ["A1", "A2"])
+  end
 
   def test_whole_coordinates_are_not_consectutive
     board = Board.new
     cruiser = Ship.new("Cruiser", 3)
     assert_equal false, board.are_whole_coordinates_consecutive?(cruiser, ["A1", "A3"])
-
+  end
   # def test_valid_placement_not_in_line
   #   board = Board.new
     # cruiser = Ship.new("Cruiser", 3)
@@ -124,4 +126,21 @@ class BoardTest < Minitest::Test
   #
   #   refute board.valid_placement?(submarine, ["A1", "A2"])
   # end
+  def test_the_board_can_render_at_start
+    board = Board.new
+    cruiser = Ship.new("Cruiser", 3)
+    board.place(cruiser, ["A1", "A2", "A3"])
+
+    expected1 = "  1 2 3 4 \nA . . . . \nB . . . . \nC . . . . \nD . . . . \n"
+    assert_equal expected1, board.render
+  end
+
+  def test_the_board_can_render_moves
+    board = Board.new
+    cruiser = Ship.new("Cruiser", 3)
+    board.place(cruiser, ["A1", "A2", "A3"])
+
+    expected2 = "  1 2 3 4 \nA S S S . \nB . . . . \nC . . . . \nD . . . . \n"
+    assert_equal expected2, board.render(true)
+  end
 end

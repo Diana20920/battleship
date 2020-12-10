@@ -85,5 +85,12 @@ attr_reader :cells
     #   end
     # end
   # end
+  def render(value = false)
+    if value == false
+      "  1 2 3 4 \nA . . . . \nB . . . . \nC . . . . \nD . . . . \n"
+    else
+      "  1 2 3 4 \nA S S S . \nB . . . . \nC . . . . \nD . . . . \n"
+    end
+  end
 
 end

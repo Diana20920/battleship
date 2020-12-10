@@ -15,6 +15,6 @@ class Ship
       false
     else
       true
-    end 
+    end
   end
 end
