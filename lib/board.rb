@@ -32,18 +32,58 @@ attr_reader :cells
     end
   end
 
-  def valid_placement?(ship, coordinate_array)
+  def split_return_letter_ordinal_value(ship, coordinate_array)
+    @letter_ordinal_value_array = []
+    coordinate_array.each do |coordinate|
+      @letter_ordinal_value_array << coordinate[0].ord
+    end
+    @letter_ordinal_value_array
+  end
+
+  def split_return_number(ship, coordinate_array)
+    @number_array =[]
+    coordinate_array.each do |coordinate|
+      @number_array << coordinate[1].to_i
+    end
+    @number_array
+  end
+
+  def coordinates_same_row?(ship, coordinate_array)
+    split_return_letter_ordinal_value(ship, coordinate_array)
+      if @letter_ordinal_value_array.all?(@letter_ordinal_value_array[0])
+        true
+      else
+        false
+      end
+  end
+
+  def coordinates_same_column?(ship, coordinate_array)
+    split_return_number(ship, coordinate_array)
+      if @number_array.all?(@number_array[0])
+        true
+      else
+        false
+      end
+  end
+
+  def are_whole_coordinates_consecutive?(ship, coordinate_array)
+
+  end
+
+
+
+  # def valid_placement?(ship, coordinate_array)
     # if ship.length != array.count
     #   false
     # else
     #   true
     # end
-    coordinate_array.each do |coordinate|
-      if @cells[coordinate].ship != nil
-        false
-        break
-      end
-    end
-  end
+    # coordinate_array.each do |coordinate|
+    #   if @cells[coordinate].ship != nil
+    #     false
+    #     break
+    #   end
+    # end
+  # end
 
 end
