@@ -12,18 +12,12 @@ class Cell
   end
 
   def empty?
-    if @ship == nil
-      true
-    else
-      false
-    end
+    return true if @ship == nil
   end
 
   def fire_upon
     @was_fired_upon = true
-    if @ship != nil
-      ship.hit
-    end
+    ship.hit if @ship != nil
   end
 
   def render(value = false)
