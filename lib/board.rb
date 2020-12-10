@@ -32,11 +32,17 @@ attr_reader :cells
     end
   end
 
-  def valid_placement?(ship, array)
-    if ship.length != array.count
-      false
-    else
-      true
+  def valid_placement?(ship, coordinate_array)
+    # if ship.length != array.count
+    #   false
+    # else
+    #   true
+    # end
+    coordinate_array.each do |coordinate|
+      if @cells[coordinate].ship != nil
+        false
+        break
+      end
     end
   end
 
