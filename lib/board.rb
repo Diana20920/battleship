@@ -142,19 +142,35 @@ attr_reader :cells
     end
   end
 
+  # def render(value = false)
+  #   if value == false
+  #     "  1 2 3 4 \n" +
+  #     "A . . . . \n" +
+  #     "B . . . . \n" +
+  #     "C . . . . \n" +
+  #     "D . . . . \n"
+  #   else
+  #     "  1 2 3 4 \n" +
+  #     "A S S S . \n" +
+  #     "B . . . . \n" +
+  #     "C . . . . \n" +
+  #     "D . . . . \n"
+  #   end
+  # end
+
   def render(value = false)
     if value == false
       "  1 2 3 4 \n" +
-      "A . . . . \n" +
-      "B . . . . \n" +
-      "C . . . . \n" +
-      "D . . . . \n"
-    else
+      "A #{@cells["A1"].render(value = false)} #{@cells["A2"].render(value = false)} #{@cells["A3"].render(value = false)} #{@cells["A4"].render(value = false)} \n" +
+      "B #{@cells["B1"].render(value = false)} #{@cells["B2"].render(value = false)} #{@cells["B3"].render(value = false)} #{@cells["B4"].render(value = false)} \n" +
+      "C #{@cells["C1"].render(value = false)} #{@cells["C2"].render(value = false)} #{@cells["C3"].render(value = false)} #{@cells["C4"].render(value = false)} \n" +
+      "D #{@cells["D1"].render(value = false)} #{@cells["D2"].render(value = false)} #{@cells["D3"].render(value = false)} #{@cells["D4"].render(value = false)} \n"
+    else value == true
       "  1 2 3 4 \n" +
-      "A S S S . \n" +
-      "B . . . . \n" +
-      "C . . . . \n" +
-      "D . . . . \n"
+      "A #{@cells["A1"].render(true)} #{@cells["A2"].render(true)} #{@cells["A3"].render(true)} #{@cells["A4"].render(true)} \n" +
+      "B #{@cells["B1"].render(true)} #{@cells["B2"].render(true)} #{@cells["B3"].render(true)} #{@cells["B4"].render(true)} \n" +
+      "C #{@cells["C1"].render(true)} #{@cells["C2"].render(true)} #{@cells["C3"].render(true)} #{@cells["C4"].render(true)} \n" +
+      "D #{@cells["D1"].render(true)} #{@cells["D2"].render(true)} #{@cells["D3"].render(true)} #{@cells["D4"].render(true)} \n"
     end
   end
 end
