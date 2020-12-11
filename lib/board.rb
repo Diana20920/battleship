@@ -27,8 +27,12 @@ attr_reader :cells
   end
 
   def place(ship, coordinate_array)
-    coordinate_array.each do |coordinate|
-      @cells[coordinate].place_ship(ship)
+    if valid_placement?(ship, coordinate_array) == true
+      coordinate_array.each do |coordinate|
+        @cells[coordinate].place_ship(ship)
+      end
+    # else
+    #   return "Invalid placement"
     end
   end
 
@@ -66,31 +70,75 @@ attr_reader :cells
       end
   end
 
-  def are_whole_coordinates_consecutive?(ship, coordinate_array)
+  # def coordinates_diagonal?(ship, coordinate_array)
+  #   if (coordinates_same_row?(ship, coordinate_array) == false && coordinates_same_column?(ship, coordinate_array) == false) || (coordinates_same_row?(ship, coordinate_array) == true && coordinates_same_column?(ship, coordinate_array) == true)
+  #     true
+  #   else
+  #     false
+  #   end
+  # end
 
+  def increments_by?(step, array)
+    sorted_array = array.sort
+    latest_number = sorted_array[0]
+    sorted_array[1, (sorted_array.count - 1)].each do |number|
+      if latest_number + step != number
+        return false
+      end
+      latest_number = number
+    end
+    return true
   end
 
-
-
-  # def valid_placement?(ship, coordinate_array)
-    # if ship.length != array.count
-    #   false
-    # else
-    #   true
-    # end
-    # coordinate_array.each do |coordinate|
-    #   if @cells[coordinate].ship != nil
-    #     false
-    #     break
-    #   end
-    # end
-  # end
-  def render(value = false)
-    if value == false
-      "  1 2 3 4 \nA . . . . \nB . . . . \nC . . . . \nD . . . . \n"
+  def coordinates_consecutive_horizontal?(ship, coordinate_array)
+    split_return_number(ship, coordinate_array)
+    if coordinates_same_row?(ship, coordinate_array) == true && increments_by?(1, @number_array) == true
+      true
     else
-      "  1 2 3 4 \nA S S S . \nB . . . . \nC . . . . \nD . . . . \n"
+      false
     end
   end
 
+  def coordinates_consecutive_vertical?(ship, coordinate_array)
+    split_return_letter_ordinal_value(ship, coordinate_array)
+    if coordinates_same_column?(ship, coordinate_array) == true && increments_by?(1, @letter_ordinal_value_array) == true
+      true
+    else
+      false
+    end
+  end
+
+  def coordinates_overall_consecutive?(ship, coordinate_array)
+    if coordinates_consecutive_horizontal?(ship, coordinate_array) == true || coordinates_consecutive_vertical?(ship, coordinate_array) == true
+      true
+    else
+      false
+    end
+  end
+
+  def correct_length?(ship, coordinate_array)
+    if ship.length != coordinate_array.count
+      false
+    else
+      true
+    end
+  end
+
+  def ship_overlap?(ship, coordinate_array)
+    coordinate_array.each do |coordinate|
+      if @cells[coordinate].empty? == true
+        return false
+      else
+        return true
+      end
+    end
+  end
+
+  def valid_placement?(ship, coordinate_array)
+    if ship_overlap?(ship, coordinate_array) == false && correct_length?(ship, coordinate_array) == true && coordinates_overall_consecutive?(ship, coordinate_array) == true
+      return true
+    else
+      return false
+    end
+  end
 end
