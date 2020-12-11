@@ -13,6 +13,11 @@ class Cell
 
   def empty?
     return true if @ship == nil
+  #   if @ship == nil
+  #     return true
+  #   else
+  #     return false
+  #   end
   end
 
   def fire_upon
