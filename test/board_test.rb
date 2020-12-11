@@ -40,6 +40,7 @@ class BoardTest < Minitest::Test
     cell_1 = board.cells["A1"]
     cell_2 = board.cells["A2"]
     cell_3 = board.cells["A3"]
+
     assert_equal cruiser, cell_1.ship
     assert_equal cruiser, cell_2.ship
     assert_equal cruiser, cell_3.ship
@@ -124,6 +125,7 @@ class BoardTest < Minitest::Test
   def test_whole_coordinates_are_consectutive_horizontal
     board = Board.new
     cruiser = Ship.new("Cruiser", 3)
+
     assert_equal true, board.coordinates_consecutive_horizontal?(cruiser, ["A1", "A2", "A3"])
   end
 
@@ -188,5 +190,4 @@ class BoardTest < Minitest::Test
     cruiser = Ship.new("Cruiser", 3)
     assert_equal true, board.valid_placement?(cruiser, ["A1", "A2", "A3"])
   end
-
 end
