@@ -141,4 +141,20 @@ attr_reader :cells
       return false
     end
   end
+
+  def render(value = false)
+    if value == false
+      "  1 2 3 4 \n" +
+      "A . . . . \n" +
+      "B . . . . \n" +
+      "C . . . . \n" +
+      "D . . . . \n"
+    else
+      "  1 2 3 4 \n" +
+      "A S S S . \n" +
+      "B . . . . \n" +
+      "C . . . . \n" +
+      "D . . . . \n"
+    end
+  end
 end
