@@ -190,4 +190,23 @@ class BoardTest < Minitest::Test
     cruiser = Ship.new("Cruiser", 3)
     assert_equal true, board.valid_placement?(cruiser, ["A1", "A2", "A3"])
   end
+
+  def test_the_board_can_render_at_start
+    # require "pry"; binding.pry
+    board = Board.new
+    cruiser = Ship.new("Cruiser", 3)
+    board.place(cruiser, ["A1", "A2", "A3"])
+
+    expected1 = "  1 2 3 4 \nA . . . . \nB . . . . \nC . . . . \nD . . . . \n"
+    assert_equal expected1, board.render
+  end
+
+  def test_the_board_can_render_moves
+    board = Board.new
+    cruiser = Ship.new("Cruiser", 3)
+    board.place(cruiser, ["A1", "A2", "A3"])
+
+    expected2 = "  1 2 3 4 \nA S S S . \nB . . . . \nC . . . . \nD . . . . \n"
+    assert_equal expected2, board.render(true)
+  end
 end
