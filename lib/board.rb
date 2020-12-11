@@ -31,6 +31,8 @@ attr_reader :cells
       coordinate_array.each do |coordinate|
         @cells[coordinate].place_ship(ship)
       end
+    # else
+    #   return "Invalid placement"
     end
   end
 
