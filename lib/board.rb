@@ -31,6 +31,7 @@ attr_reader :cells
       coordinate_array.each do |coordinate|
         @cells[coordinate].place_ship(ship)
       end
+    #   puts "Those are invalid coordinates. Please try again:"
     # else
     #   return "Invalid placement"
     end
@@ -134,8 +135,25 @@ attr_reader :cells
     end
   end
 
+  def valid_coordinates_scan(ship, coordinate_array)
+    @valid_coords_array = []
+    coordinate_array.each do |coordinate|
+      @valid_coords_array << valid_coordinate?(coordinate)
+    end
+    @valid_coords_array
+  end
+
+  def valid_coords_check(ship, coordinate_array)
+    valid_coordinates_scan(ship, coordinate_array)
+    if @valid_coords_array.include?(false) == true
+      false
+    else
+      true
+    end
+  end
+
   def valid_placement?(ship, coordinate_array)
-    if ship_overlap?(ship, coordinate_array) == false && correct_length?(ship, coordinate_array) == true && coordinates_overall_consecutive?(ship, coordinate_array) == true
+    if valid_coords_check(ship, coordinate_array) == true && ship_overlap?(ship, coordinate_array) == false && correct_length?(ship, coordinate_array) == true && coordinates_overall_consecutive?(ship, coordinate_array) == true
       return true
     else
       return false
