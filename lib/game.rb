@@ -32,11 +32,10 @@ class Game
       player_ok_to_place_submarine
       display_boards
       player_shot_feedback
-      # computer_shot_feedback
-      display_boards
+      computer_shot_feedback
 
     elsif @menu_selection == "q"
-      puts "Quitter"
+      puts "Have a nice day!"
     end
   end
 
