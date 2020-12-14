@@ -15,28 +15,36 @@ class Game
     @menu_selection = gets.chomp
   end
 
+  def play
+    if @menu_selection == "p"
+      instructions
+      comp_ok_to_place_submarine
+      display_comp_board
+      # player_ok_to_place_cruiser
+      # player_ok_to_place_submarine
+      # display_boards
+      # player_shot_feedback
+      # computer_shot_feedback
+
+    elsif @menu_selection == "q"
+      puts "Have a nice day!"
+    else
+      re_main_menu
+    end
+  end
+
+  def re_main_menu
+    puts "You entered an invalid input. Please enter p to play or enter q to quit."
+    @menu_selection = gets.chomp
+    play
+  end
+
+#####################
   def create_ships
     @player_cruiser = Ship.new("Cruiser", 3)
     @comp_cruiser = Ship.new("Cruiser", 3)
     @player_submarine = Ship.new("Submarine", 2)
     @comp_submarine = Ship.new("Submarine", 2)
-  end
-
-
-  def play
-    if @menu_selection == "p"
-      comp_ok_to_place_submarine
-      instructions
-      display_comp_board
-      player_ok_to_place_cruiser
-      player_ok_to_place_submarine
-      display_boards
-      player_shot_feedback
-      computer_shot_feedback
-
-    elsif @menu_selection == "q"
-      puts "Have a nice day!"
-    end
   end
 
   def instructions
@@ -68,14 +76,23 @@ class Game
     @comp_board.place(@comp_cruiser, @comp_cruiser_coords)
   end
 
-  def comp_submarine_placement_valid
+  def refine_valid_submarine_placements
     comp_cruiser_placement
     @valid_submarine_placements = [["A1", "A2"], ["A2", "A3"], ["A3", "A4"], ["B1", "B2"], ["B2", "B3"], ["B3", "B4"], ["C1", "C2"], ["C2", "C3"], ["C3", "C4"], ["D1", "D2"], ["D2", "D3"], ["D3", "D4"], ["A1", "B1"], ["B1", "C1"], ["C1", "D1"], ["A2", "B2"], ["B2", "C2"], ["C2", "D2"], ["A3", "B3"], ["B3", "C3"], ["C3", "D3"], ["A4", "B4"], ["B4", "C4"], ["C4", "D4"]]
+    @valid_submarine_placements.delete_if do |placement|
+      placement.include?(@comp_cruiser_coords[0]) || placement.include?(@comp_cruiser_coords[1]) || placement.include?(@comp_cruiser_coords[2])
+    end
     @comp_submarine_coords = @valid_submarine_placements.sample
   end
 
+  # def comp_submarine_placement_valid
+  #   comp_cruiser_placement
+  #   @valid_submarine_placements = [["A1", "A2"], ["A2", "A3"], ["A3", "A4"], ["B1", "B2"], ["B2", "B3"], ["B3", "B4"], ["C1", "C2"], ["C2", "C3"], ["C3", "C4"], ["D1", "D2"], ["D2", "D3"], ["D3", "D4"], ["A1", "B1"], ["B1", "C1"], ["C1", "D1"], ["A2", "B2"], ["B2", "C2"], ["C2", "D2"], ["A3", "B3"], ["B3", "C3"], ["C3", "D3"], ["A4", "B4"], ["B4", "C4"], ["C4", "D4"]]
+  #   @comp_submarine_coords = @valid_submarine_placements.sample
+  # end
+
   def comp_ok_to_place_submarine ####CEO METHOD
-    comp_submarine_placement_valid
+    refine_valid_submarine_placements
     if @comp_board.valid_placement?(@comp_submarine, @comp_submarine_coords) == true
       comp_place_submarine
     else
