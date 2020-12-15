@@ -4,6 +4,8 @@ class Game
     @comp_board = comp_board
     @player_board = player_board
     @valid_targets = ["A1", "A2", "A3", "A4", "B1", "B2", "B3", "B4", "C1", "C2", "C3", "C4", "D1", "D2", "D3", "D4"]
+    @player_shot = nil
+    @comp_shot = nil
 
   end
 
@@ -227,12 +229,16 @@ class Game
 
   def computer_shot_feedback
     # computer_shot
-    if @player_board.cells[@comp_shot].empty? == false && @player_board.cells[@comp_shot].ship.sunk? == true
-      puts "My shot on #{@comp_shot} was a hit and sunk a ship."
-    elsif @player_board.cells[@comp_shot].empty? == false && @player_board.cells[@comp_shot].ship.sunk? == false
-      puts "My shot on #{@comp_shot} was a hit."
-    elsif @player_board.cells[@comp_shot].empty? == true
+    # if @player_board.cells[@comp_shot].empty? == false && @player_board.cells[@comp_shot].ship.sunk? == true
+    #   puts "My shot on #{@comp_shot} was a hit and sunk a ship."
+    # elsif @player_board.cells[@comp_shot].empty? == false && @player_board.cells[@comp_shot].ship.sunk? == false
+    #   puts "My shot on #{@comp_shot} was a hit."
+    if @player_board.cells[@comp_shot].empty? == true
       puts "My shot on #{@comp_shot} was a miss."
+    elsif @player_board.cells[@comp_shot].ship.sunk? == false
+      puts "My shot on #{@comp_shot} was a hit."
+    else
+      puts "My shot on #{@comp_shot} was a hit and it sunk a ship."
     end
   end
 
@@ -384,12 +390,16 @@ class Game
 
   def player_shot_feedback
     # ok_to_fire_at_comp
-    if @comp_board.cells[@player_shot].empty? == false && @comp_board.cells[@player_shot].ship.sunk? == true
-      puts "Your shot on #{@player_shot} was a hit and sunk a ship."
-    elsif @comp_board.cells[@player_shot].empty? == false && @comp_board.cells[@player_shot].ship.sunk? == false
-      puts "Your shot on #{@player_shot} was a hit."
-    elsif @comp_board.cells[@player_shot].empty? == true
+    # if @comp_board.cells[@player_shot].empty? == false && @comp_board.cells[@player_shot].ship.sunk? == true
+    #   puts "Your shot on #{@player_shot} was a hit and sunk a ship."
+    # elsif @comp_board.cells[@player_shot].empty? == false && @comp_board.cells[@player_shot].ship.sunk? == false
+    #   puts "Your shot on #{@player_shot} was a hit."
+    if @comp_board.cells[@player_shot].empty? == true
       puts "Your shot on #{@player_shot} was a miss."
+    elsif @comp_board.cells[@player_shot].ship.sunk? == false
+      puts "Your shot on #{@player_shot} was a hit."
+    else
+      puts "Your shot on #{@player_shot} was a hit and it sunk a ship."
     end
   end
 
