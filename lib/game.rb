@@ -147,21 +147,21 @@ class Game
   end
 
   def instructions
-    puts "I have laid out my ships on the grid. \nYou now need to lay out your two ships. \nThe Cruiser is three units long and the Submarine is two units long."
+    return "I have laid out my ships on the grid. \nYou now need to lay out your two ships. \nThe Cruiser is three units long and the Submarine is two units long."
   end
 
   def display_comp_board
-    puts @comp_board.render
+    @comp_board.render
   end
 
   def display_player_board
-    puts @player_board.render(true)
+    @player_board.render(true)
   end
 
   def display_boards
-    puts "=============COMPUTER BOARD============="
+    "=============COMPUTER BOARD============="
     display_comp_board
-    puts "==============PLAYER BOARD=============="
+    "==============PLAYER BOARD=============="
     display_player_board
   end
 
@@ -402,7 +402,4 @@ class Game
       puts "Your shot on #{@player_shot} was a hit and it sunk a ship."
     end
   end
-
-
-
 end
