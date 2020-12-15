@@ -3,29 +3,47 @@ class Game
   def initialize(comp_board, player_board)
     @comp_board = comp_board
     @player_board = player_board
+    @valid_targets = ["A1", "A2", "A3", "A4", "B1", "B2", "B3", "B4", "C1", "C2", "C3", "C4", "D1", "D2", "D3", "D4"]
+    @player_shot = nil
+    @comp_shot = nil
+
   end
 
   def final_game
-    menu_prompt
-    play
+    main_menu
+    setup
+    turn
+    game_over?
+    end_game
   end
-
-  def menu_prompt
+##MAIN MENU
+  def main_menu
     puts "Welcome to BATTLESHIP \nEnter p to play. Enter q to quit."
     @menu_selection = gets.chomp
+    sleep(1)
   end
 
-  def play
+  def re_main_menu
+    puts "You entered an invalid input. Please enter p to play or enter q to quit."
+    @menu_selection = gets.chomp
+    setup
+    sleep(1)
+  end
+
+## SETUP
+  def setup
     if @menu_selection == "p"
       instructions
+      sleep(5)
+      create_ships
       comp_ok_to_place_submarine
       display_comp_board
+      sleep(2)
       player_ok_to_place_cruiser
+      sleep(1)
       display_player_board
       player_ok_to_place_submarine
-      display_boards
-      shot_feedback
-      
+      sleep(1)
     elsif @menu_selection == "q"
       puts "Have a nice day!"
     else
@@ -33,17 +51,91 @@ class Game
     end
   end
 
-  def shot_feedback
-    computer_shot
+  ##TURN
+  def turn
+    display_boards
     ok_to_fire_at_comp
+    computer_shot
     player_shot_feedback
     computer_shot_feedback
+    sleep(2)
+    game_over?
   end
+
+#### GAME OVER
+  def game_over?
+    if (comp_alive && player_alive) == true
+      turn
+    end
+  end
+
+  def comp_alive
+    if (@comp_cruiser.sunk? == false || @comp_submarine.sunk? == false) == true
+      true
+    else
+      false
+    end
+  end
+
+  def player_alive
+    if (@player_cruiser.sunk? == false || @player_submarine.sunk? == false) == true
+      true
+    else
+      false
+    end
+  end
+
+#### END GAME
+
+  def end_game
+    player_won
+    comp_won
+    sleep(2)
+    final_game
+  end
+
+  def player_won
+    if player_alive == true
+      puts "You won!"
+    end
+  end
+
+  def comp_won
+    if comp_alive == true
+      puts "I won!"
+    end
+  end
+
+
+  # def play
+  #   if @menu_selection == "p"
+  #     instructions
+  #     comp_ok_to_place_submarine
+  #     display_comp_board
+  #     player_ok_to_place_cruiser
+  #     display_player_board
+  #     player_ok_to_place_submarine
+  #     display_boards
+  #     shot_feedback
+
+  #   elsif @menu_selection == "q"
+  #     puts "Have a nice day!"
+  #   else
+  #     re_main_menu
+  #   end
+  # end
+
+  # def shot_feedback
+  #   computer_shot
+  #   ok_to_fire_at_comp
+  #   player_shot_feedback
+  #   computer_shot_feedback
+  # end
 
   def re_main_menu
     puts "You entered an invalid input. Please enter p to play or enter q to quit."
     @menu_selection = gets.chomp
-    play
+    setup
   end
 
 #####################
@@ -77,7 +169,7 @@ class Game
   #####COMPUTER SHIP PLACEMENT
 
   def comp_cruiser_placement
-    create_ships
+    # create_ships
     @valid_cruiser_placements = [["A1", "A2", "A3"], ["A2", "A3", "A4"], ["B1", "B2", "B3"], ["B2", "B3", "B4"], ["C1", "C2", "C3"], ["C2", "C3", "C4"], ["D1", "D2", "D3"], ["D2", "D3", "D4"], ["A1", "B1", "C1"], ["B1", "C1", "D1"], ["A2", "B2", "C2"], ["B2", "C2", "D2"], ["A3", "B3", "C3"], ["B3", "C3", "D3"], ["A4", "B4", "C4"], ["B4", "C4", "D4"]]
     @comp_cruiser_coords = @valid_cruiser_placements.sample
     @comp_board.place(@comp_cruiser, @comp_cruiser_coords)
@@ -127,21 +219,26 @@ class Game
   ### COMPUTER SHOT
 
   def computer_shot
-    @valid_targets = ["A1", "A2", "A3", "A4", "B1", "B2", "B3", "B4", "C1", "C2", "C3", "C4", "D1", "D2", "D3", "D4"]
     @comp_shot = @valid_targets.sample
     @player_board.cells[@comp_shot].fire_upon
-    @valid_targets.delete(@comp_shot)
-    @valid_targets
+    # @valid_targets.delete(@comp_shot)
+    @valid_targets.delete_if do |target|
+      target == @comp_shot
+    end
   end
 
   def computer_shot_feedback
     # computer_shot
-    if @player_board.cells[@comp_shot].empty? == false && @player_board.cells[@comp_shot].ship.sunk? == true
-      puts "My shot on #{@comp_shot} was a hit and sunk a ship."
-    elsif @player_board.cells[@comp_shot].empty? == false && @player_board.cells[@comp_shot].ship.sunk? == false
-      puts "My shot on #{@comp_shot} was a hit."
-    elsif @player_board.cells[@comp_shot].empty? == true
+    # if @player_board.cells[@comp_shot].empty? == false && @player_board.cells[@comp_shot].ship.sunk? == true
+    #   puts "My shot on #{@comp_shot} was a hit and sunk a ship."
+    # elsif @player_board.cells[@comp_shot].empty? == false && @player_board.cells[@comp_shot].ship.sunk? == false
+    #   puts "My shot on #{@comp_shot} was a hit."
+    if @player_board.cells[@comp_shot].empty? == true
       puts "My shot on #{@comp_shot} was a miss."
+    elsif @player_board.cells[@comp_shot].ship.sunk? == false
+      puts "My shot on #{@comp_shot} was a hit."
+    else
+      puts "My shot on #{@comp_shot} was a hit and it sunk a ship."
     end
   end
 
@@ -157,7 +254,7 @@ class Game
   end
 
   def player_cruiser_coords
-    create_ships
+    # create_ships
     puts "Enter the squares for the Cruiser (3 spaces):"
     @p_cruiser_coords = gets.chomp
     @p_cruiser_coords.split(" ").to_a
@@ -194,7 +291,7 @@ class Game
   end
 
   def player_submarine_coords
-    create_ships
+    # create_ships
     puts "Enter the squares for the Submarine (2 spaces):"
     @p_submarine_coords = gets.chomp
     @p_submarine_coords.split(" ").to_a
@@ -223,10 +320,20 @@ class Game
 
   #Player Shot
 
+  # def ok_to_fire_at_comp ###CEO METHOD
+  #   player_shot
+  #   player_already_fired_on_cell
+  #   if @comp_board.valid_coordinate?(@player_shot) == true
+  #     player_fire_on_comp
+  #   else
+  #     player_invalid_shot
+  #   end
+  # end
+
   def ok_to_fire_at_comp ###CEO METHOD
     player_shot
     if @comp_board.valid_coordinate?(@player_shot) == true
-      player_fire_on_comp
+      player_already_fired_on_cell
     else
       player_invalid_shot
     end
@@ -249,7 +356,33 @@ class Game
 
   def player_ok_to_fire_at_comp_redo
     if @comp_board.valid_coordinate?(@player_shot) == true
+      player_already_fired_on_cell
+    else
+      player_invalid_shot
+    end
+  end
+
+  def ok_to_fire_at_comp_same_cell
+    if @comp_board.valid_coordinate?(@player_shot) == true
       player_fire_on_comp
+    else
+      player_invalid_shot
+    end
+  end
+
+  def player_already_fired_on_cell
+    if @comp_board.cells[@player_shot].was_fired_upon == true
+      puts "You have already fired upon that cell. Please enter a different cell to fire upon:"
+      @player_shot = gets.chomp
+      ok_to_fire_at_comp_after_same_shot_prompt
+    else
+      ok_to_fire_at_comp_same_cell
+    end
+  end
+
+  def ok_to_fire_at_comp_after_same_shot_prompt
+    if @comp_board.valid_coordinate?(@player_shot) == true
+      player_already_fired_on_cell
     else
       player_invalid_shot
     end
@@ -257,13 +390,19 @@ class Game
 
   def player_shot_feedback
     # ok_to_fire_at_comp
-    if @comp_board.cells[@player_shot].empty? == false && @comp_board.cells[@player_shot].ship.sunk? == true
-      puts "Your shot on #{@player_shot} was a hit and sunk a ship."
-    elsif @comp_board.cells[@player_shot].empty? == false && @comp_board.cells[@player_shot].ship.sunk? == false
-      puts "Your shot on #{@player_shot} was a hit."
-    elsif @comp_board.cells[@player_shot].empty? == true
+    # if @comp_board.cells[@player_shot].empty? == false && @comp_board.cells[@player_shot].ship.sunk? == true
+    #   puts "Your shot on #{@player_shot} was a hit and sunk a ship."
+    # elsif @comp_board.cells[@player_shot].empty? == false && @comp_board.cells[@player_shot].ship.sunk? == false
+    #   puts "Your shot on #{@player_shot} was a hit."
+    if @comp_board.cells[@player_shot].empty? == true
       puts "Your shot on #{@player_shot} was a miss."
+    elsif @comp_board.cells[@player_shot].ship.sunk? == false
+      puts "Your shot on #{@player_shot} was a hit."
+    else
+      puts "Your shot on #{@player_shot} was a hit and it sunk a ship."
     end
   end
+
+
 
 end
