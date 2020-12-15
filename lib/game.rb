@@ -3,6 +3,8 @@ class Game
   def initialize(comp_board, player_board)
     @comp_board = comp_board
     @player_board = player_board
+    @valid_targets = ["A1", "A2", "A3", "A4", "B1", "B2", "B3", "B4", "C1", "C2", "C3", "C4", "D1", "D2", "D3", "D4"]
+
   end
 
   def final_game
@@ -54,6 +56,7 @@ class Game
     computer_shot
     player_shot_feedback
     computer_shot_feedback
+    sleep(2)
     game_over?
   end
 
@@ -214,11 +217,12 @@ class Game
   ### COMPUTER SHOT
 
   def computer_shot
-    @valid_targets = ["A1", "A2", "A3", "A4", "B1", "B2", "B3", "B4", "C1", "C2", "C3", "C4", "D1", "D2", "D3", "D4"]
     @comp_shot = @valid_targets.sample
     @player_board.cells[@comp_shot].fire_upon
-    @valid_targets.delete(@comp_shot)
-    @valid_targets
+    # @valid_targets.delete(@comp_shot)
+    @valid_targets.delete_if do |target|
+      target == @comp_shot
+    end
   end
 
   def computer_shot_feedback
@@ -310,10 +314,20 @@ class Game
 
   #Player Shot
 
+  # def ok_to_fire_at_comp ###CEO METHOD
+  #   player_shot
+  #   player_already_fired_on_cell
+  #   if @comp_board.valid_coordinate?(@player_shot) == true
+  #     player_fire_on_comp
+  #   else
+  #     player_invalid_shot
+  #   end
+  # end
+
   def ok_to_fire_at_comp ###CEO METHOD
     player_shot
     if @comp_board.valid_coordinate?(@player_shot) == true
-      player_fire_on_comp
+      player_already_fired_on_cell
     else
       player_invalid_shot
     end
@@ -336,7 +350,33 @@ class Game
 
   def player_ok_to_fire_at_comp_redo
     if @comp_board.valid_coordinate?(@player_shot) == true
+      player_already_fired_on_cell
+    else
+      player_invalid_shot
+    end
+  end
+
+  def ok_to_fire_at_comp_same_cell
+    if @comp_board.valid_coordinate?(@player_shot) == true
       player_fire_on_comp
+    else
+      player_invalid_shot
+    end
+  end
+
+  def player_already_fired_on_cell
+    if @comp_board.cells[@player_shot].was_fired_upon == true
+      puts "You have already fired upon that cell. Please enter a different cell to fire upon:"
+      @player_shot = gets.chomp
+      ok_to_fire_at_comp_after_same_shot_prompt
+    else
+      ok_to_fire_at_comp_same_cell
+    end
+  end
+
+  def ok_to_fire_at_comp_after_same_shot_prompt
+    if @comp_board.valid_coordinate?(@player_shot) == true
+      player_already_fired_on_cell
     else
       player_invalid_shot
     end
