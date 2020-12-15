@@ -15,6 +15,38 @@ class Game
     @menu_selection = gets.chomp
   end
 
+  def play
+    if @menu_selection == "p"
+      instructions
+      comp_ok_to_place_submarine
+      display_comp_board
+      player_ok_to_place_cruiser
+      display_player_board
+      player_ok_to_place_submarine
+      display_boards
+      shot_feedback
+      
+    elsif @menu_selection == "q"
+      puts "Have a nice day!"
+    else
+      re_main_menu
+    end
+  end
+
+  def shot_feedback
+    computer_shot
+    ok_to_fire_at_comp
+    player_shot_feedback
+    computer_shot_feedback
+  end
+
+  def re_main_menu
+    puts "You entered an invalid input. Please enter p to play or enter q to quit."
+    @menu_selection = gets.chomp
+    play
+  end
+
+#####################
   def create_ships
     @player_cruiser = Ship.new("Cruiser", 3)
     @comp_cruiser = Ship.new("Cruiser", 3)
@@ -22,29 +54,12 @@ class Game
     @comp_submarine = Ship.new("Submarine", 2)
   end
 
-
-  def play
-    if @menu_selection == "p"
-      comp_ok_to_place_submarine
-      instructions
-      display_comp_board
-      player_ok_to_place_cruiser
-      player_ok_to_place_submarine
-      display_boards
-      player_shot_feedback
-      computer_shot_feedback
-
-    elsif @menu_selection == "q"
-      puts "Have a nice day!"
-    end
-  end
-
   def instructions
     puts "I have laid out my ships on the grid. \nYou now need to lay out your two ships. \nThe Cruiser is three units long and the Submarine is two units long."
   end
 
   def display_comp_board
-    puts @comp_board.render(true)
+    puts @comp_board.render
   end
 
   def display_player_board
@@ -68,14 +83,23 @@ class Game
     @comp_board.place(@comp_cruiser, @comp_cruiser_coords)
   end
 
-  def comp_submarine_placement_valid
+  def refine_valid_submarine_placements
     comp_cruiser_placement
     @valid_submarine_placements = [["A1", "A2"], ["A2", "A3"], ["A3", "A4"], ["B1", "B2"], ["B2", "B3"], ["B3", "B4"], ["C1", "C2"], ["C2", "C3"], ["C3", "C4"], ["D1", "D2"], ["D2", "D3"], ["D3", "D4"], ["A1", "B1"], ["B1", "C1"], ["C1", "D1"], ["A2", "B2"], ["B2", "C2"], ["C2", "D2"], ["A3", "B3"], ["B3", "C3"], ["C3", "D3"], ["A4", "B4"], ["B4", "C4"], ["C4", "D4"]]
+    @valid_submarine_placements.delete_if do |placement|
+      placement.include?(@comp_cruiser_coords[0]) || placement.include?(@comp_cruiser_coords[1]) || placement.include?(@comp_cruiser_coords[2])
+    end
     @comp_submarine_coords = @valid_submarine_placements.sample
   end
 
+  # def comp_submarine_placement_valid
+  #   comp_cruiser_placement
+  #   @valid_submarine_placements = [["A1", "A2"], ["A2", "A3"], ["A3", "A4"], ["B1", "B2"], ["B2", "B3"], ["B3", "B4"], ["C1", "C2"], ["C2", "C3"], ["C3", "C4"], ["D1", "D2"], ["D2", "D3"], ["D3", "D4"], ["A1", "B1"], ["B1", "C1"], ["C1", "D1"], ["A2", "B2"], ["B2", "C2"], ["C2", "D2"], ["A3", "B3"], ["B3", "C3"], ["C3", "D3"], ["A4", "B4"], ["B4", "C4"], ["C4", "D4"]]
+  #   @comp_submarine_coords = @valid_submarine_placements.sample
+  # end
+
   def comp_ok_to_place_submarine ####CEO METHOD
-    comp_submarine_placement_valid
+    refine_valid_submarine_placements
     if @comp_board.valid_placement?(@comp_submarine, @comp_submarine_coords) == true
       comp_place_submarine
     else
@@ -104,9 +128,21 @@ class Game
 
   def computer_shot
     @valid_targets = ["A1", "A2", "A3", "A4", "B1", "B2", "B3", "B4", "C1", "C2", "C3", "C4", "D1", "D2", "D3", "D4"]
-    @computer_shot = @valid_targets.sample
-    @player_board.cells[@computer_shot].fire_upon
-    @valid_targets.delete(@computer_shot)
+    @comp_shot = @valid_targets.sample
+    @player_board.cells[@comp_shot].fire_upon
+    @valid_targets.delete(@comp_shot)
+    @valid_targets
+  end
+
+  def computer_shot_feedback
+    # computer_shot
+    if @player_board.cells[@comp_shot].empty? == false && @player_board.cells[@comp_shot].ship.sunk? == true
+      puts "My shot on #{@comp_shot} was a hit and sunk a ship."
+    elsif @player_board.cells[@comp_shot].empty? == false && @player_board.cells[@comp_shot].ship.sunk? == false
+      puts "My shot on #{@comp_shot} was a hit."
+    elsif @player_board.cells[@comp_shot].empty? == true
+      puts "My shot on #{@comp_shot} was a miss."
+    end
   end
 
   ####PLAYER CRUISER PLACEMENT
@@ -220,26 +256,14 @@ class Game
   end
 
   def player_shot_feedback
-    ok_to_fire_at_comp
-    if @comp_board.cells[@player_shot].empty? == true
-      "Your shot on #{@player_shot} was a miss."
+    # ok_to_fire_at_comp
+    if @comp_board.cells[@player_shot].empty? == false && @comp_board.cells[@player_shot].ship.sunk? == true
+      puts "Your shot on #{@player_shot} was a hit and sunk a ship."
     elsif @comp_board.cells[@player_shot].empty? == false && @comp_board.cells[@player_shot].ship.sunk? == false
-      "Your shot on #{@player_shot} was a hit."
-    elsif @comp_board.cells[@player_shot].empty? == false && @comp_board.cells[@player_shot].ship.sunk? == true
-      "Your shot on #{@player_shot} was a hit and sunk a ship."
+      puts "Your shot on #{@player_shot} was a hit."
+    elsif @comp_board.cells[@player_shot].empty? == true
+      puts "Your shot on #{@player_shot} was a miss."
     end
   end
-
-  def computer_shot_feedback
-    computer_shot
-    if @player_board.cells[@comp_shot].empty? == true
-      "My shot on #{@comp_shot} was a miss."
-    elsif @player_board.cells[@comp_shot].empty? == false && @player_board.cells[@comp_shot].ship.sunk? == false
-      "My shot on #{@comp_shot} was a hit."
-    elsif @player_board.cells[@comp_shot].empty? == false && @player_board.cells[@comp_shot].ship.sunk? == true
-      "My shot on #{@player_shot} was a hit and sunk a ship."
-    end
-  end
-
 
 end
