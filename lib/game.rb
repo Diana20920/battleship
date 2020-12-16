@@ -1,8 +1,8 @@
 class Game
 
-  def initialize(comp_board, player_board)
-    @comp_board = comp_board
-    @player_board = player_board
+  def initialize
+    @comp_board = Board.new
+    @player_board = Board.new
     @valid_targets = ["A1", "A2", "A3", "A4", "B1", "B2", "B3", "B4", "C1", "C2", "C3", "C4", "D1", "D2", "D3", "D4"]
     @player_shot = nil
     @comp_shot = nil
@@ -46,15 +46,12 @@ class Game
       create_ships
       comp_ok_to_place_submarine
       display_comp_board
-      sleep(1)
       player_ok_to_place_cruiser
-      sleep(1)
       display_player_board
       player_ok_to_place_submarine
-      sleep(1)
       turn
-      game_over?
-      end_game
+      # game_over?
+      # end_game
     elsif @menu_selection == "q"
       puts "Thanks for stopping by - have a nice day!"
     else
@@ -66,19 +63,44 @@ class Game
   def turn
     display_boards
     ok_to_fire_at_comp
-    computer_shot
     player_shot_feedback
-    computer_shot_feedback
-    sleep(2)
-    game_over?
+    game_over_player?
+    # computer_shot
+    # game_over?
+    # player_shot_feedback
+    # computer_shot_feedback
+    # game_over?
+  end
+#### GAME OVER
+  def game_over_player?
+    if comp_alive == false
+      player_won
+      end_game
+    else
+      computer_shot_sequence
+    end
   end
 
-#### GAME OVER
-  def game_over?
-    if (comp_alive && player_alive) == true
+  def computer_shot_sequence
+    computer_shot
+    computer_shot_feedback
+    game_over_computer?
+  end
+
+  def game_over_computer?
+    if player_alive == false
+      comp_won
+      end_game
+    else
       turn
     end
   end
+
+  # def game_over? #This is the one that works
+  #   if (comp_alive && player_alive) == true
+  #     turn
+  #   end
+  # end
 
   def comp_alive
     if (@comp_cruiser.sunk? == false || @comp_submarine.sunk? == false) == true
@@ -99,9 +121,6 @@ class Game
 #### END GAME
 
   def end_game
-    player_won
-    comp_won
-    sleep(2)
     reset
     final_game
   end
@@ -246,11 +265,11 @@ class Game
     # elsif @player_board.cells[@comp_shot].empty? == false && @player_board.cells[@comp_shot].ship.sunk? == false
     #   puts "My shot on #{@comp_shot} was a hit."
     if @player_board.cells[@comp_shot].empty? == true
-      puts "My shot on #{@comp_shot} was a miss. \n"
+      puts "My shot on #{@comp_shot} was a miss."
     elsif @player_board.cells[@comp_shot].ship.sunk? == false
-      puts "My shot on #{@comp_shot} was a hit. \n"
+      puts "My shot on #{@comp_shot} was a hit."
     else
-      puts "My shot on #{@comp_shot} was a hit and it sunk a ship. \n"
+      puts "My shot on #{@comp_shot} was a hit and it sunk a ship."
     end
   end
 
