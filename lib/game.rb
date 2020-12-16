@@ -6,15 +6,14 @@ class Game
     @valid_targets = ["A1", "A2", "A3", "A4", "B1", "B2", "B3", "B4", "C1", "C2", "C3", "C4", "D1", "D2", "D3", "D4"]
     @player_shot = nil
     @comp_shot = nil
-
   end
 
   def final_game
     main_menu
     setup
-    turn
-    game_over?
-    end_game
+    # turn
+    # game_over?
+    # end_game
   end
 ##MAIN MENU
   def main_menu
@@ -30,6 +29,15 @@ class Game
     sleep(1)
   end
 
+  def reset
+    @comp_board = Board.new
+    @player_board = Board.new
+    @valid_targets = ["A1", "A2", "A3", "A4", "B1", "B2", "B3", "B4", "C1", "C2", "C3", "C4", "D1", "D2", "D3", "D4"]
+    @player_shot = nil
+    @comp_shot = nil
+  end
+
+
 ## SETUP
   def setup
     if @menu_selection == "p"
@@ -38,14 +46,17 @@ class Game
       create_ships
       comp_ok_to_place_submarine
       display_comp_board
-      sleep(2)
+      sleep(1)
       player_ok_to_place_cruiser
       sleep(1)
       display_player_board
       player_ok_to_place_submarine
       sleep(1)
+      turn
+      game_over?
+      end_game
     elsif @menu_selection == "q"
-      puts "Have a nice day!"
+      puts "Thanks for stopping by - have a nice day!"
     else
       re_main_menu
     end
@@ -91,6 +102,7 @@ class Game
     player_won
     comp_won
     sleep(2)
+    reset
     final_game
   end
 
@@ -147,21 +159,21 @@ class Game
   end
 
   def instructions
-    return "I have laid out my ships on the grid. \nYou now need to lay out your two ships. \nThe Cruiser is three units long and the Submarine is two units long."
+    puts "I have laid out my ships on the grid. \nYou now need to lay out your two ships. \nThe Cruiser is three units long and the Submarine is two units long."
   end
 
   def display_comp_board
-    @comp_board.render
+    puts @comp_board.render
   end
 
   def display_player_board
-    @player_board.render(true)
+    puts @player_board.render(true)
   end
 
   def display_boards
-    "=============COMPUTER BOARD============="
+    puts "=============COMPUTER BOARD============="
     display_comp_board
-    "==============PLAYER BOARD=============="
+    puts "==============PLAYER BOARD=============="
     display_player_board
   end
 
@@ -234,11 +246,11 @@ class Game
     # elsif @player_board.cells[@comp_shot].empty? == false && @player_board.cells[@comp_shot].ship.sunk? == false
     #   puts "My shot on #{@comp_shot} was a hit."
     if @player_board.cells[@comp_shot].empty? == true
-      puts "My shot on #{@comp_shot} was a miss."
+      puts "My shot on #{@comp_shot} was a miss. \n"
     elsif @player_board.cells[@comp_shot].ship.sunk? == false
-      puts "My shot on #{@comp_shot} was a hit."
+      puts "My shot on #{@comp_shot} was a hit. \n"
     else
-      puts "My shot on #{@comp_shot} was a hit and it sunk a ship."
+      puts "My shot on #{@comp_shot} was a hit and it sunk a ship. \n"
     end
   end
 
@@ -402,4 +414,5 @@ class Game
       puts "Your shot on #{@player_shot} was a hit and it sunk a ship."
     end
   end
+
 end
