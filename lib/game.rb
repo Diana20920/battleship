@@ -270,7 +270,7 @@ class Game
   def player_place_submarine #(player_ok_to_place_submarine)
     @player_board.place(@player_submarine, @p_submarine_coords.split(" ").to_a)
   end
-  ##############################################################
+
   def ok_to_fire_at_comp ###CEO METHOD (setup)
     player_shot
     if @comp_board.valid_coordinate?(@player_shot) == true

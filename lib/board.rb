@@ -31,9 +31,6 @@ attr_reader :cells
       coordinate_array.each do |coordinate|
         @cells[coordinate].place_ship(ship)
       end
-    #   puts "Those are invalid coordinates. Please try again:"
-    # else
-    #   return "Invalid placement"
     end
   end
 
@@ -70,14 +67,6 @@ attr_reader :cells
         false
       end
   end
-
-  # def coordinates_diagonal?(ship, coordinate_array)
-  #   if (coordinates_same_row?(ship, coordinate_array) == false && coordinates_same_column?(ship, coordinate_array) == false) || (coordinates_same_row?(ship, coordinate_array) == true && coordinates_same_column?(ship, coordinate_array) == true)
-  #     true
-  #   else
-  #     false
-  #   end
-  # end
 
   def increments_by?(step, array)
     sorted_array = array.sort
@@ -160,22 +149,6 @@ attr_reader :cells
     end
   end
 
-  # def render(value = false)
-  #   if value == false
-  #     "  1 2 3 4 \n" +
-  #     "A . . . . \n" +
-  #     "B . . . . \n" +
-  #     "C . . . . \n" +
-  #     "D . . . . \n"
-  #   else
-  #     "  1 2 3 4 \n" +
-  #     "A S S S . \n" +
-  #     "B . . . . \n" +
-  #     "C . . . . \n" +
-  #     "D . . . . \n"
-  #   end
-  # end
-
   def render(value = false)
     if value == false
       "  1 2 3 4 \n" +
@@ -191,4 +164,5 @@ attr_reader :cells
       "D #{@cells["D1"].render(true)} #{@cells["D2"].render(true)} #{@cells["D3"].render(true)} #{@cells["D4"].render(true)} \n"
     end
   end
+  
 end
